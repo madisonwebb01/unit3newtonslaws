@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Newton's Laws Practice Test</title>
+<meta name="description" content="Unit 3 practice test on Newton's Laws: free body diagrams, F = ma, the 3rd Law, friction, multi-stage problems, and drag.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234b1369'/%3E%3Crect x='22' y='22' width='20' height='20' rx='2' fill='%23fff'/%3E%3Cpath d='M42 32h14M50 26l6 6-6 6' stroke='%23ffb74d' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M32 42v14M26 50l6 6 6-6' stroke='%23ff7aae' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;600;700&family=Albert+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: one centered column. Stat rail, tab row, then the active panel.
+   Colors and fonts come from the Unit 3: Newton's Laws slide theme (light lavender ground, near-black text,
+   deep purple ACCENT1 #4B1369, purple #8752B8, lavender #D6C2F5; Alexandria titles, Albert Sans body).
+   Single light look on purpose, to match the slides. Force colors match the FBD Practicer. */
+:root{
+  --bg:#fdf6ff; --blob:#ecdffb; --surface:#ffffff; --ink:#15110e; --muted:#5e5066; --line:#e6d8f7;
+  --accent:#4b1369; --accent-ink:#ffffff; --accent2:#8752b8; --soft:#f4ecfd; --lav:#d6c2f5;
+  --ok:#0f7a5a; --ok-bg:#e6f7f0; --bad:#a3283c; --bad-bg:#fdeaee; --flag:#a65e00; --flag-bg:#fff3e0;
+  --obj:#ffffff; --vcol:#2e7d32;
+  --c-g:#c2185b; --c-N:#4b1369; --c-f:#a85d00; --c-app:#1565c0; --c-T:#2e7d32; --c-air:#00838f; --c-net:#15110e;
+  --font:"Albert Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --display:"Alexandria","Albert Sans","Segoe UI",system-ui,sans-serif;
+  --r:13px; --shadow:0 1px 2px rgba(75,19,105,.06),0 6px 20px rgba(75,19,105,.08);
+  color-scheme:light;
+}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;
+  background-image:radial-gradient(40rem 26rem at 108% -8%, var(--blob), transparent 70%),radial-gradient(30rem 22rem at -10% 110%, var(--blob), transparent 70%);
+  background-attachment:fixed}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+sub,sup{font-size:.68em;line-height:0}
+.wrap{max-width:900px;margin:0 auto;padding-block:20px 28px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex;flex-direction:column;gap:16px}
+
+/* Header */
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--accent2);font-weight:600}
+h1{margin:2px 0 4px;font-family:var(--display);color:var(--accent);font-size:clamp(1.6rem,4vw,2.3rem);font-weight:600;letter-spacing:-.01em;line-height:1.15;text-wrap:balance}
+.intro{margin:0;color:var(--muted);font-size:.95rem;max-width:62ch}
+
+/* Stat rail */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stat{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-family:var(--display);color:var(--accent);font-size:1.55rem;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{font-size:.8rem;color:var(--muted)}
+
+/* Tabs + chips */
+.tabrow{display:flex;align-items:center;gap:8px}
+.tabs,.chips,.subtabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab,.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;cursor:pointer;font-weight:500;min-height:44px;white-space:nowrap}
+.tab[aria-selected="true"],.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip{padding:6px 14px;font-size:.92rem}
+.chip:disabled{opacity:.45;cursor:default}
+.tab:not([aria-selected="true"]):hover,.chip:not([aria-pressed="true"]):not(:disabled):hover{background:var(--soft)}
+.reset{margin-left:auto;border:1.5px solid var(--line);background:transparent;border-radius:10px;padding:6px 12px;cursor:pointer;font-size:.85rem;color:var(--muted);min-height:44px;white-space:nowrap}
+.reset.armed{border-color:var(--bad);color:var(--bad);background:var(--bad-bg)}
+.toggles{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.92rem;color:var(--muted)}
+.toggles label{display:flex;align-items:center;gap:8px;cursor:pointer;min-height:44px}
+.toggles input{width:20px;height:20px;accent-color:var(--accent)}
+.panel{display:flex;flex-direction:column;gap:12px}
+.note{font-size:.85rem;color:var(--muted);margin:0}
+
+/* Question card */
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:clamp(16px,3vw,26px);display:flex;flex-direction:column;gap:14px;min-width:0;scroll-margin-top:12px}
+.qtop{display:flex;align-items:flex-start;gap:10px}
+.meta{font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;flex:1;min-width:0}
+.flag{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:.85rem;min-height:44px;color:var(--muted);white-space:nowrap}
+.flag[aria-pressed="true"]{border-color:var(--flag);color:var(--flag);background:var(--flag-bg)}
+.bar{height:6px;border-radius:99px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent2);border-radius:99px;transition:width .25s}
+.stem{font-size:1.12rem;line-height:1.5;margin:0}
+.stem b{font-weight:600}
+.last{font-size:.82rem;color:var(--muted);margin:-6px 0 0}
+.fig{display:flex;justify-content:center;background:var(--soft);border-radius:12px;padding:10px;overflow-x:auto}
+.fig svg{width:100%;max-width:340px;height:auto;display:block}
+svg text{font-family:var(--font)}
+.fbd-box{fill:var(--obj);stroke:var(--accent);stroke-width:3}
+.fbd-txt{fill:var(--ink);font-size:13px;font-weight:600;text-anchor:middle}
+.fbd-lab{font-weight:600}
+
+.part{display:flex;flex-direction:column;gap:10px;border-top:1.5px dashed var(--line);padding-top:12px}
+.part:first-of-type{border-top:none;padding-top:0}
+.plab{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent2)}
+.ask{margin:0;font-size:1.04rem}
+.opts{display:grid;gap:8px}
+.opts.figs{grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))}
+.opts.figs .orow{flex-direction:column;align-items:stretch;gap:4px}
+.opts.figs .why{padding-left:0}
+.opts.figs .whybtn{margin-left:0;align-self:center}
+.opt{display:flex;flex-direction:column;gap:6px;text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:11px;padding:10px 14px;min-height:48px;width:100%}
+button.opt{cursor:pointer}
+button.opt:hover{background:var(--soft)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.orow{display:flex;gap:10px;align-items:flex-start}
+.ltr{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--lav);color:var(--accent);font-weight:600;font-size:.85rem}
+.otext{flex:1;min-width:0;padding-top:1px}
+.otext svg{width:100%;max-width:200px;max-height:210px;height:auto;display:block;margin:0 auto}
+.opt.correct{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.correct .ltr{background:var(--ok);color:var(--surface)}
+.opt.wrong .ltr{background:var(--bad);color:var(--surface)}
+.why{font-size:.92rem;line-height:1.45;padding-left:36px}
+.why b{font-weight:600}
+.whybtn{align-self:flex-start;margin-left:36px;border:none;background:transparent;color:var(--accent);cursor:pointer;font-size:.85rem;padding:4px 0;text-decoration:underline;min-height:32px}
+.tag{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.correct .tag{color:var(--ok)} .wrong .tag{color:var(--bad)}
+.numrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.numrow input{width:10rem;max-width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);font-size:1.05rem;min-height:48px;font-variant-numeric:tabular-nums}
+.numrow input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--soft)}
+.unit{color:var(--muted);font-weight:500}
+.check{border:none;border-radius:11px;padding:10px 20px;background:var(--accent);color:var(--accent-ink);font-weight:600;cursor:pointer;min-height:48px;align-self:flex-start}
+.check:disabled{opacity:.4;cursor:default}
+.msg{font-size:.88rem;color:var(--bad);margin:0}
+.banner{border-radius:11px;padding:10px 14px;font-weight:600}
+.banner.ok{background:var(--ok-bg);color:var(--ok)} .banner.bad{background:var(--bad-bg);color:var(--bad)}
+.banner span{font-weight:400;color:var(--ink);margin-left:6px}
+.trap{background:var(--bad-bg);border-radius:10px;padding:8px 12px;font-size:.92rem}
+.work{background:var(--soft);border-radius:11px;padding:10px 14px}
+.work h4,.watch h4{margin:0 0 4px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.work ol{margin:0;padding-left:1.3em;display:grid;gap:3px;font-size:.95rem;font-variant-numeric:tabular-nums}
+.work li:last-child{font-weight:600}
+.watch{border:1.5px solid var(--lav);border-radius:11px;padding:10px 14px;font-size:.93rem}
+.src{font-size:.88rem;color:var(--muted);margin:0}
+.src b{color:var(--ink);font-weight:600}
+.nav{display:flex;gap:10px;justify-content:space-between}
+.btn{border:1.5px solid var(--line);background:var(--surface);border-radius:11px;padding:10px 18px;cursor:pointer;font-weight:600;min-height:48px}
+.btn:hover{background:var(--soft)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.empty{text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:12px;align-items:center;padding:28px 16px}
+.empty p{margin:0;max-width:46ch}
+
+/* Tools */
+.flash{min-height:220px;display:grid;place-items:center;text-align:center;cursor:pointer;border:1.5px dashed var(--lav);border-radius:var(--r);padding:24px;background:var(--surface);width:100%}
+.flash .front{font-family:var(--display);color:var(--accent);font-size:1.35rem;font-weight:600}
+.flash .back{font-size:1.08rem;max-width:52ch}
+.flash .hint{display:block;margin-top:10px;font-size:.82rem;color:var(--muted);font-weight:400}
+.count{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.toolnav{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.autopsy .wrongopt{border:1.5px solid var(--bad);background:var(--bad-bg);border-radius:11px;padding:10px 14px}
+.autopsy .wrongopt svg{max-width:200px;width:100%;height:auto;display:block}
+.small{font-size:.9rem;color:var(--muted)}
+.lawbtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+
+/* Review */
+.rlist{display:flex;flex-direction:column;gap:12px}
+.ritem{gap:10px}
+.rpart{display:grid;gap:6px;font-size:.95rem}
+.pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.fl{background:var(--flag-bg);color:var(--flag)}
+.rchoice{border-radius:10px;padding:8px 12px}
+.rchoice.c{background:var(--ok-bg)} .rchoice.w{background:var(--bad-bg)}
+.rchoice svg{max-width:180px;width:100%;height:auto;display:block}
+
+footer{font-size:.78rem;color:var(--muted);text-align:center;display:grid;gap:2px;padding-top:8px}
+footer p{margin:0}
+
+@media (max-width:620px){
+  .stats{grid-template-columns:1fr 1fr;gap:8px}
+  .stat{padding:6px 12px}
+  .stat b{font-size:1.15rem}
+  .stat span{font-size:.74rem}
+  .tabs,.chips,.subtabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .tabs::-webkit-scrollbar,.chips::-webkit-scrollbar,.subtabs::-webkit-scrollbar{display:none}
+  .tabrow .tabs{flex:1 1 auto;min-width:0}
+  .reset{flex:none;padding:6px 10px;font-size:.8rem}
+  .intro{font-size:.86rem;line-height:1.45}
+  .toggles{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:6px 14px}
+  .toggles::-webkit-scrollbar{display:none}
+  .toggles label{white-space:nowrap}
+  .opts.figs{grid-template-columns:1fr 1fr}
+  .otext svg{max-height:150px}
+  .stem{font-size:1.04rem}
+  .why{padding-left:0}
+  .whybtn{margin-left:0}
+  .lawbtns{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){ .bar i{transition:none} html{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Unit 3 · Newton's Laws</div>
+    <h1>Newton's Laws Practice Test</h1>
+    <p class="intro">Answer first, then check. Every answer explains why it is right or wrong. Your progress is saved in this browser only: it doesn't sync to other devices, and your teacher can't see it.</p>
+  </header>
+
+  <section class="stats" aria-label="Your progress">
+    <div class="stat"><b id="stSeen">0 / 0</b><span>Questions seen</span></div>
+    <div class="stat"><b id="stAcc">–</b><span>Accuracy</span></div>
+    <div class="stat"><b id="stMiss">0</b><span>In your missed pile</span></div>
+    <div class="stat"><b id="stFlag">0</b><span>Flagged for review</span></div>
+  </section>
+
+  <div class="tabrow">
+    <div class="tabs" role="tablist" aria-label="Sections of this page">
+      <button class="tab" role="tab" id="tab-practice" aria-selected="true" type="button">Practice Test</button>
+      <button class="tab" role="tab" id="tab-tools" aria-selected="false" type="button">Additional Practice Tools</button>
+      <button class="tab" role="tab" id="tab-review" aria-selected="false" type="button">My Review</button>
+    </div>
+    <button class="reset" id="resetBtn" type="button">Reset progress</button>
+  </div>
+
+  <!-- Practice -->
+  <section class="panel" id="panel-practice" role="tabpanel" aria-labelledby="tab-practice">
+    <div class="chips" id="filterChips" aria-label="Choose questions"></div>
+    <div class="toggles">
+      <label><input type="checkbox" id="optUnseen" checked> Unseen first</label>
+      <label><input type="checkbox" id="optShufQ"> Shuffle questions</label>
+      <label><input type="checkbox" id="optShufA"> Shuffle answers</label>
+    </div>
+    <article class="card" id="qcard" aria-live="polite"></article>
+    <div class="nav">
+      <button class="btn" id="prevBtn" type="button">← Back</button>
+      <button class="btn pri" id="nextBtn" type="button">Next →</button>
+    </div>
+  </section>
+
+  <!-- Tools -->
+  <section class="panel" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
+    <div class="subtabs chips" id="toolTabs"></div>
+    <div id="toolBody" class="panel"></div>
+  </section>
+
+  <!-- Review -->
+  <section class="panel" id="panel-review" role="tabpanel" aria-labelledby="tab-review" hidden>
+    <div class="chips" id="reviewChips"></div>
+    <div class="rlist" id="reviewList"></div>
+  </section>
+
+  <footer>
+    <p>Created using Claude by Madison Webb, 2026.</p>
+    <p>Anthropic. (2026). <i>Claude</i> [large language model]. https://claude.ai</p>
+  </footer>
+  <div id="spacer" aria-hidden="true"></div>
+</div>
+
+<script src="shared.js"></script>
+<script src="first-law.js"></script>
+<script src="second-law.js"></script>
+<script src="third-law.js"></script>
+<script src="forces-kinematics.js"></script>
+<script src="friction.js"></script>
+<script src="big-problems.js"></script>
+<script src="air-resistance.js"></script>
+<script src="tools.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(id){ return document.getElementById(id); };
+var LETTERS="ABCDEFGH";
+var KEY="webb-newtons-laws-practice-v1";
+
+/* ---------- Normalize the bank ---------- */
+var ALL=[], BYID={};
+if(typeof BANK==="undefined" || !BANK.length){
+  $("qcard").innerHTML='<div class="empty"><p>The questions did not load. If you are hosting this page, make sure every .js file was uploaded next to index.html.</p></div>';
+  return;
+}
+BANK.forEach(function(sec){
+  sec.qs.forEach(function(q){
+    q.id=sec.id+"-"+q.n; q.sec=sec;
+    q.multi=!!q.parts;
+    if(!q.parts) q.parts=[{opts:q.opts, num:q.num, traps:q.traps, work:q.work, ordered:q.ordered}];
+    q.parts.forEach(function(p){ if(p.ordered==null) p.ordered=!!q.ordered; });
+    ALL.push(q); BYID[q.id]=q;
+  });
+});
+
+/* ---------- Storage ---------- */
+var S={ans:{}, flags:{}, opt:{unseen:true, shufQ:false, shufA:false}};
+try{ var raw=localStorage.getItem(KEY); if(raw){ var o=JSON.parse(raw); if(o&&o.ans) S.ans=o.ans; if(o&&o.flags) S.flags=o.flags; if(o&&o.opt) S.opt=Object.assign(S.opt,o.opt); } }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+Object.keys(S.ans).forEach(function(k){ if(!BYID[k]) delete S.ans[k]; });
+Object.keys(S.flags).forEach(function(k){ if(!BYID[k]) delete S.flags[k]; });
+
+/* ---------- Free body diagrams (SVG from data) ---------- */
+var SUB={g:"g",N:"N",f:"f",app:"app",T:"T",air:"air",net:"net"};
+var DIRS={r:[1,0],l:[-1,0],u:[0,-1],d:[0,1]};
+var NAMES={g:"gravity",N:"normal force",f:"friction",app:"applied force",T:"tension",air:"air resistance",net:"net force"};
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function fbd(spec,compact){
+  var h=compact?26:34, s="", minX=-h, maxX=h, minY=-h, maxY=h, desc=[];
+  function grow(x1,y1,x2,y2){ minX=Math.min(minX,x1,x2); maxX=Math.max(maxX,x1,x2); minY=Math.min(minY,y1,y2); maxY=Math.max(maxY,y1,y2); }
+  s+='<rect class="fbd-box" x="'+(-h)+'" y="'+(-h)+'" width="'+(2*h)+'" height="'+(2*h)+'" rx="4"/>';
+  if(spec.txt) s+='<text class="fbd-txt" x="0" y="5">'+esc(spec.txt)+'</text>';
+  (spec.f||[]).forEach(function(f){
+    var k=f[0], d=DIRS[f[1]], L=compact?18+(f[2]||.5)*64:34+(f[2]||.5)*120, val=f[3]||"", off=f[4]||0;
+    var px=d[1]!==0?off:0, py=d[0]!==0?off:0;
+    var x1=px+d[0]*h, y1=py+d[1]*h, x2=x1+d[0]*L, y2=y1+d[1]*L;
+    var hx=x2-d[0]*16, hy=y2-d[1]*16, wx=d[1]*9, wy=d[0]*9;
+    var col="var(--c-"+k+")";
+    s+='<path d="M'+x1+' '+y1+' L'+hx+' '+hy+'" stroke="'+col+'" stroke-width="5" stroke-linecap="round"/>';
+    s+='<polygon fill="'+col+'" points="'+x2+','+y2+' '+(hx+wx)+','+(hy+wy)+' '+(hx-wx)+','+(hy-wy)+'"/>';
+    var fs=compact?28:19, lab='F<tspan dy="6" font-size="'+Math.round(fs*.7)+'">'+SUB[k]+'</tspan>'+(val?'<tspan dy="-6"> = '+esc(val)+'</tspan>':'');
+    var wlen=(1+SUB[k].length*.6+(val?val.length+3:0))*fs*.56, tx, ty, anc;
+    if(f[1]==="r"){ tx=x2+8; ty=y2+6; anc="start"; grow(tx,ty-16,tx+wlen,ty+6); }
+    else if(f[1]==="l"){ tx=x2-8; ty=y2+6; anc="end"; grow(tx-wlen,ty-16,tx,ty+6); }
+    else if(off){ anc=off>0?"start":"end"; tx=x2+(off>0?6:-6); ty=f[1]==="u"?y2+4:y2+14; grow(off>0?tx:tx-wlen,ty-16,off>0?tx+wlen:tx,ty+6); }
+    else if(f[1]==="u"){ tx=x2; ty=y2-8; anc="middle"; grow(tx-wlen/2,ty-18,tx+wlen/2,ty); }
+    else { tx=x2; ty=y2+22; anc="middle"; grow(tx-wlen/2,ty-18,tx+wlen/2,ty+4); }
+    grow(x1,y1,x2,y2);
+    s+='<text class="fbd-lab" x="'+tx+'" y="'+ty+'" text-anchor="'+anc+'" fill="'+col+'" font-size="'+fs+'">'+lab+'</text>';
+    desc.push(NAMES[k]+(val?" "+val:"")+" "+({r:"right",l:"left",u:"up",d:"down"})[f[1]]);
+  });
+  if(spec.v){
+    var v=spec.v, a, b;
+    if(v==="r"){ a=[48,-54]; b=[118,-54]; } else if(v==="l"){ a=[-48,-54]; b=[-118,-54]; }
+    else if(v==="d"){ a=[74,-30]; b=[74,40]; } else { a=[74,40]; b=[74,-30]; }
+    var dv=DIRS[v], hx2=b[0]-dv[0]*13, hy2=b[1]-dv[1]*13;
+    s+='<path d="M'+a[0]+' '+a[1]+' L'+hx2+' '+hy2+'" stroke="var(--vcol)" stroke-width="4" stroke-dasharray="7 5" stroke-linecap="round"/>';
+    s+='<polygon fill="var(--vcol)" points="'+b[0]+','+b[1]+' '+(hx2+dv[1]*8)+','+(hy2+dv[0]*8)+' '+(hx2-dv[1]*8)+','+(hy2-dv[0]*8)+'"/>';
+    var vx=(v==="r"||v==="l")?(a[0]+b[0])/2:b[0]+16, vy=(v==="r"||v==="l")?a[1]-10:6;
+    s+='<text x="'+vx+'" y="'+vy+'" text-anchor="middle" fill="var(--vcol)" font-size="20" font-style="italic" font-weight="600">v</text>';
+    grow(Math.min(a[0],b[0]),Math.min(a[1],b[1])-28,Math.max(a[0],b[0])+26,Math.max(a[1],b[1]));
+    desc.push("moving "+({r:"right",l:"left",u:"up",d:"down"})[v]);
+  }
+  var pad=10, w=maxX-minX+2*pad, ht=maxY-minY+2*pad;
+  var label="Free body diagram: "+(desc.length?desc.join(", "):"a box with no forces");
+  return '<svg viewBox="'+(minX-pad)+' '+(minY-pad)+' '+w+' '+ht+'" role="img" aria-label="'+esc(label)+'">'+s+'</svg>';
+}
+function optHTML(o){ return (o && typeof o==="object" && o.fig) ? fbd(o.fig,true) : o; }
+/* Draw every diagram choice on the same scale, so arrow lengths compare fairly. */
+function sharedFigs(opts){
+  var out={}, box=null;
+  opts.forEach(function(o,i){
+    if(!(o[0]&&typeof o[0]==="object"&&o[0].fig)) return;
+    var svg=fbd(o[0].fig,true), m=svg.match(/viewBox="([^"]+)"/), v=m[1].split(" ").map(Number);
+    out[i]=svg;
+    if(!box) box=[v[0],v[1],v[0]+v[2],v[1]+v[3]];
+    else box=[Math.min(box[0],v[0]),Math.min(box[1],v[1]),Math.max(box[2],v[0]+v[2]),Math.max(box[3],v[1]+v[3])];
+  });
+  var vb=box[0]+" "+box[1]+" "+(box[2]-box[0])+" "+(box[3]-box[1]);
+  Object.keys(out).forEach(function(k){ out[k]=out[k].replace(/viewBox="[^"]+"/,'viewBox="'+vb+'"'); });
+  return out;
+}
+function plain(o){ if(o && typeof o==="object" && o.fig){ return "(diagram)"; } return o; }
+
+/* ---------- Helpers ---------- */
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function count(fn){ return ALL.filter(fn).length; }
+function isMissed(q){ var a=S.ans[q.id]; return !!a && !a.ok; }
+function isCorrect(q){ var a=S.ans[q.id]; return !!a && a.ok; }
+function reviewLine(q){ var r=REVIEW[q.topic]; return r ? '<p class="src"><b>Where to review this:</b> '+r+'.</p>' : ''; }
+function parseNum(str){ var t=String(str).replace(/,/g,"").replace(/\s+/g,"").replace(/−/g,"-"); var m=t.match(/-?\d*\.?\d+(e-?\d+)?/i); return m ? parseFloat(m[0]) : NaN; }
+function fmtNum(x){ return (Math.round(x*10000)/10000).toLocaleString("en-US",{maximumFractionDigits:4}); }
+
+/* ---------- Stats ---------- */
+function renderStats(){
+  var answered=Object.keys(S.ans).length, right=count(isCorrect);
+  $("stSeen").textContent=answered+" / "+ALL.length;
+  $("stAcc").textContent=answered?Math.round(100*right/answered)+"%":"–";
+  $("stMiss").textContent=count(isMissed);
+  $("stFlag").textContent=Object.keys(S.flags).length;
+}
+
+/* ---------- Tabs ---------- */
+var TAB="practice";
+["practice","tools","review"].forEach(function(t){
+  $("tab-"+t).onclick=function(){ showTab(t); };
+});
+function showTab(t){
+  TAB=t;
+  ["practice","tools","review"].forEach(function(x){ $("tab-"+x).setAttribute("aria-selected",String(x===t)); $("panel-"+x).hidden=x!==t; });
+  if(t==="tools") renderTools();
+  if(t==="review") renderReview();
+  if(t==="practice"){ renderChips(); }
+}
+
+/* ---------- Reset (two-step, no confirm()) ---------- */
+var armT=null;
+$("resetBtn").onclick=function(){
+  var b=$("resetBtn");
+  if(!b.classList.contains("armed")){
+    b.classList.add("armed"); b.textContent="Tap again to erase everything";
+    clearTimeout(armT); armT=setTimeout(function(){ b.classList.remove("armed"); b.textContent="Reset progress"; },4000);
+    return;
+  }
+  clearTimeout(armT); b.classList.remove("armed"); b.textContent="Progress cleared";
+  S.ans={}; S.flags={}; save();
+  setTimeout(function(){ b.textContent="Reset progress"; },1800);
+  FILTER="mixed"; buildOrder(true); renderAll();
+};
+
+/* ---------- Practice ---------- */
+var FILTER="mixed", ORDER=[], POS=0, CUR=null;
+function inFilter(q){
+  if(FILTER==="mixed") return true;
+  if(FILTER==="missed") return isMissed(q);
+  if(FILTER==="flagged") return !!S.flags[q.id];
+  return q.sec.id===FILTER;
+}
+function buildOrder(resetPos){
+  var list=ALL.filter(inFilter);
+  if(S.opt.shufQ) list=shuffle(list);
+  if(S.opt.unseen){ var a=list.filter(function(q){return !S.ans[q.id];}), b=list.filter(function(q){return !!S.ans[q.id];}); list=a.concat(b); }
+  var curId=ORDER[POS];
+  ORDER=list.map(function(q){return q.id;});
+  if(resetPos || ORDER.indexOf(curId)<0) POS=0; else POS=ORDER.indexOf(curId);
+  CUR=null;
+}
+function renderChips(){
+  var c=$("filterChips"), html="";
+  var items=[["mixed","Mixed"]].concat(BANK.map(function(s){return [s.id,s.name];}));
+  items.push(["missed","Missed only ("+count(isMissed)+")"]);
+  items.push(["flagged","Flagged ("+Object.keys(S.flags).length+")"]);
+  items.forEach(function(it){
+    var dis=(it[0]==="missed"&&!count(isMissed))||(it[0]==="flagged"&&!Object.keys(S.flags).length);
+    html+='<button class="chip" type="button" data-f="'+it[0]+'" aria-pressed="'+(FILTER===it[0])+'"'+(dis?' disabled':'')+'>'+it[1]+'</button>';
+  });
+  c.innerHTML=html;
+  c.querySelectorAll(".chip").forEach(function(b){ b.onclick=function(){ FILTER=b.getAttribute("data-f"); buildOrder(true); renderChips(); renderQuestion(); scrollToCard(); }; });
+  var sel=c.querySelector('[aria-pressed="true"]'); if(sel&&sel.scrollIntoView&&window.innerWidth<=620){ try{ sel.scrollIntoView({block:"nearest",inline:"nearest"}); }catch(e){} }
+}
+["optUnseen","optShufQ","optShufA"].forEach(function(id){
+  var key={optUnseen:"unseen",optShufQ:"shufQ",optShufA:"shufA"}[id];
+  $(id).checked=!!S.opt[key];
+  $(id).onchange=function(){ S.opt[key]=$(id).checked; save(); if(key==="shufA"){ CUR=null; renderQuestion(); } else { buildOrder(true); renderQuestion(); } };
+});
+
+function newState(q){
+  return {q:q, step:0, res:[], sel:[], order:q.parts.map(function(p){
+    var idx=(p.opts||[]).map(function(_,i){return i;});
+    return (p.opts && S.opt.shufA && !p.ordered) ? shuffle(idx) : idx;
+  })};
+}
+
+function renderQuestion(){
+  var card=$("qcard");
+  if(!ORDER.length){
+    var what=FILTER==="missed"?"Questions you miss will show up here so you can retry them.":FILTER==="flagged"?"Use the Flag button on any question to save it here.":"No questions in this view.";
+    card.innerHTML='<div class="empty"><p>'+what+'</p><button class="btn pri" type="button" id="toMixed">Practice all questions</button></div>';
+    $("toMixed").onclick=function(){ FILTER="mixed"; buildOrder(true); renderChips(); renderQuestion(); };
+    $("prevBtn").disabled=true; $("nextBtn").disabled=true; return;
+  }
+  if(POS>=ORDER.length){ renderEnd(); return; }
+  var q=BYID[ORDER[POS]];
+  if(!CUR || CUR.q!==q) CUR=newState(q);
+  var st=CUR, prev=S.ans[q.id];
+  var html='<div class="qtop"><div class="meta">'+q.sec.name+' · '+q.topic+' · '+(POS+1)+' of '+ORDER.length+' in this view</div>'+
+    '<button class="flag" type="button" id="flagBtn" aria-pressed="'+(!!S.flags[q.id])+'">'+(S.flags[q.id]?"⚑ Flagged":"⚐ Flag")+'</button></div>'+
+    '<div class="bar" aria-hidden="true"><i style="width:'+((POS+1)/ORDER.length*100)+'%"></i></div>'+
+    '<p class="stem">'+q.stem+'</p>';
+  if(prev && st.step===0 && !st.res.length) html+='<p class="last">Last time: '+(prev.ok?"correct":"missed")+'. Try it again.</p>';
+  if(q.fig) html+='<div class="fig">'+fbd(q.fig)+'</div>';
+  q.parts.forEach(function(p,pi){ if(pi<=st.step) html+=partHTML(q,p,pi); });
+  if(st.res.length===q.parts.length){
+    if(q.watch) html+='<div class="watch"><h4>Watch for</h4>'+q.watch+'</div>';
+    html+=reviewLine(q);
+  }
+  card.innerHTML=html;
+  wirePart(q);
+  $("flagBtn").onclick=function(){
+    if(S.flags[q.id]) delete S.flags[q.id]; else S.flags[q.id]=1;
+    save(); renderStats(); renderChips();
+    var b=$("flagBtn"); b.setAttribute("aria-pressed",String(!!S.flags[q.id])); b.textContent=S.flags[q.id]?"⚑ Flagged":"⚐ Flag";
+  };
+  $("prevBtn").disabled=POS===0;
+  $("nextBtn").disabled=false;
+  $("nextBtn").textContent=POS===ORDER.length-1?"Finish →":"Next →";
+}
+
+function partHTML(q,p,pi){
+  var st=CUR, done=st.res[pi], h='<div class="part" data-part="'+pi+'">';
+  if(q.multi) h+='<div class="plab">Step '+"abcdefg"[pi]+'</div>';
+  if(p.ask) h+='<p class="ask">'+p.ask+'</p>';
+  if(done) h+='<div class="banner '+(done.ok?'ok':'bad')+'">'+(done.ok?'✓ Correct.':'✗ Not quite.')+(done.ok||!p.opts?'':' <span>The explanations below show why each choice works or fails.</span>')+'</div>';
+  if(p.opts){
+    var figs=p.opts.some(function(o){ return o[0]&&typeof o[0]==="object"; });
+    var vbs={}; if(figs) vbs=sharedFigs(p.opts);
+    h+='<div class="opts'+(figs?' figs':'')+'">';
+    st.order[pi].forEach(function(oi,k){
+      var o=p.opts[oi];
+      if(!done){
+        h+='<button class="opt" type="button" data-oi="'+oi+'" aria-pressed="'+(st.sel[pi]===oi)+'"><span class="orow"><span class="ltr">'+LETTERS[k]+'</span><span class="otext">'+(vbs[oi]||optHTML(o[0]))+'</span></span></button>';
+      } else {
+        var picked=done.v===oi, cls=o[1]?' correct':(picked?' wrong':'');
+        var open=!done.ok || picked || (!done.ok && o[1]);
+        h+='<div class="opt done'+cls+'" data-oi="'+oi+'"><span class="orow"><span class="ltr">'+LETTERS[k]+'</span><span class="otext">'+(vbs[oi]||optHTML(o[0]))+
+          (picked?'<div class="tag">Your answer</div>':(o[1]&&!done.ok?'<div class="tag">Correct answer</div>':''))+'</span></span>'+
+          (open?'<div class="why">'+o[2]+'</div>':'<button class="whybtn" type="button" data-why="'+oi+'">Why not this one?</button><div class="why" hidden>'+o[2]+'</div>')+'</div>';
+      }
+    });
+    h+='</div>';
+    if(!done) h+='<button class="check" type="button" data-check="'+pi+'"'+(st.sel[pi]==null?' disabled':'')+'>Check answer</button>';
+  } else {
+    var n=p.num;
+    if(!done){
+      h+='<div class="numrow"><input type="text" inputmode="decimal" autocomplete="off" id="num'+pi+'" aria-label="Your answer'+(n.unit?' in '+n.unit.replace(/<[^>]+>/g,""):'')+'" placeholder="Your answer">'+(n.unit?'<span class="unit">'+n.unit+'</span>':'')+
+        '<button class="check" type="button" data-check="'+pi+'">Check answer</button></div><p class="msg" id="msg'+pi+'" hidden>Type a number first.</p>';
+    } else {
+      h+='<div class="rchoice '+(done.ok?'c':'w')+'">You typed: <b>'+esc(done.raw)+'</b>'+(n.unit?' '+n.unit:'')+'</div>';
+      h+='<div class="rchoice c">Answer: <b>'+n.show+'</b></div>';
+      if(!done.ok && done.trap!=null) h+='<div class="trap">'+p.traps[done.trap][2]+'</div>';
+    }
+  }
+  if(done && p.work) h+='<div class="work"><h4>The work</h4><ol>'+p.work.map(function(w){return '<li>'+w+'</li>';}).join("")+'</ol></div>';
+  return h+'</div>';
+}
+
+function wirePart(q){
+  var card=$("qcard"), st=CUR;
+  card.querySelectorAll("button.opt").forEach(function(b){
+    b.onclick=function(){
+      var pi=+b.closest(".part").getAttribute("data-part");
+      st.sel[pi]=+b.getAttribute("data-oi");
+      b.parentNode.querySelectorAll("button.opt").forEach(function(x){ x.setAttribute("aria-pressed",String(x===b)); });
+      var c=card.querySelector('[data-check="'+pi+'"]'); if(c) c.disabled=false;
+    };
+  });
+  card.querySelectorAll(".whybtn").forEach(function(b){
+    b.onclick=function(){ var w=b.nextElementSibling; w.hidden=!w.hidden; b.textContent=w.hidden?"Why not this one?":"Hide"; };
+  });
+  card.querySelectorAll("[data-check]").forEach(function(b){
+    var pi=+b.getAttribute("data-check");
+    b.onclick=function(){ check(q,pi); };
+    var inp=$("num"+pi); if(inp) inp.onkeydown=function(e){ if(e.key==="Enter"){ e.preventDefault(); check(q,pi); } };
+  });
+}
+
+function check(q,pi){
+  var st=CUR, p=q.parts[pi], res, anchor;
+  if(p.opts){
+    var oi=st.sel[pi]; if(oi==null) return;
+    anchor=$("qcard").querySelector('.part[data-part="'+pi+'"] [data-oi="'+oi+'"]');
+    res={v:oi, ok:!!p.opts[oi][1]};
+  } else {
+    var inp=$("num"+pi), x=parseNum(inp.value);
+    if(isNaN(x)){ $("msg"+pi).hidden=false; inp.focus(); return; }
+    anchor=inp;
+    var ok=Math.abs(x-p.num.ans)<=p.num.tol+1e-9, trap=null;
+    if(!ok && p.traps) p.traps.forEach(function(t,i){ if(trap==null && Math.abs(x-t[0])<=t[1]+1e-9) trap=i; });
+    res={v:x, raw:inp.value.trim(), ok:ok, trap:trap};
+  }
+  var before=anchor.getBoundingClientRect().top;
+  st.res[pi]=res;
+  if(pi<q.parts.length-1) st.step=pi+1;
+  if(st.res.length===q.parts.length && st.res.every(Boolean)){
+    S.ans[q.id]={ok:st.res.every(function(r){return r.ok;}), parts:st.res.map(function(r){ return {v:r.v, raw:r.raw, ok:r.ok, trap:r.trap}; }), t:Date.now()};
+    save(); renderStats(); renderChips();
+  }
+  renderQuestion();
+  var again=p.opts ? $("qcard").querySelector('.part[data-part="'+pi+'"] [data-oi="'+res.v+'"]') : $("qcard").querySelector('.part[data-part="'+pi+'"] .rchoice');
+  if(again){ var after=again.getBoundingClientRect().top; if(Math.abs(after-before)>1) window.scrollBy(0,after-before); }
+  var nextInp=$("num"+(pi+1)); if(nextInp && pi<q.parts.length-1){ try{ nextInp.focus({preventScroll:true}); }catch(e){} }
+}
+
+function renderEnd(){
+  var ids=ORDER, done=ids.filter(function(id){return S.ans[id];}).length, right=ids.filter(function(id){return S.ans[id]&&S.ans[id].ok;}).length;
+  $("qcard").innerHTML='<div class="empty"><p><b>End of this view.</b> You have answered '+done+' of '+ids.length+' questions here, '+right+' correct.</p>'+
+    '<div class="toolnav"><button class="btn" type="button" id="again">Start this view over</button>'+(count(isMissed)?'<button class="btn pri" type="button" id="goMissed">Practice missed ('+count(isMissed)+')</button>':'')+'</div></div>';
+  $("again").onclick=function(){ buildOrder(true); renderQuestion(); scrollToCard(); };
+  if($("goMissed")) $("goMissed").onclick=function(){ FILTER="missed"; buildOrder(true); renderChips(); renderQuestion(); scrollToCard(); };
+  $("prevBtn").disabled=false; $("nextBtn").disabled=true; $("nextBtn").textContent="Next →";
+}
+
+function scrollToCard(){
+  var c=$("qcard"), sp=$("spacer");
+  sp.style.height="0px";
+  var top=c.getBoundingClientRect().top+window.pageYOffset-12;
+  var need=top+window.innerHeight-document.documentElement.scrollHeight;
+  if(need>0) sp.style.height=Math.ceil(need)+"px";
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  try{ window.scrollTo({top:top, behavior:reduce?"auto":"smooth"}); }catch(e){ window.scrollTo(0,top); }
+}
+$("nextBtn").onclick=function(){ if(POS<ORDER.length){ POS++; CUR=null; renderQuestion(); scrollToCard(); } };
+$("prevBtn").onclick=function(){ if(POS>0){ POS=Math.min(POS-1,ORDER.length-1); CUR=null; renderQuestion(); scrollToCard(); } };
+
+/* ---------- Tools ---------- */
+var TOOL="flash", DECK="terms", FL={i:0, flip:false, cards:[]}, AUT={sec:"all", i:0, show:false, cards:[]}, SRT={i:0, cards:[], picked:null, right:0, done:0};
+function autopsyCards(){
+  var out=[];
+  ALL.forEach(function(q){
+    if(AUT.sec!=="all" && q.sec.id!==AUT.sec) return;
+    q.parts.forEach(function(p){
+      if(!p.opts) return;
+      var right=p.opts.filter(function(o){return o[1];})[0];
+      p.opts.forEach(function(o){ if(!o[1]) out.push({q:q, p:p, o:o, right:right}); });
+    });
+  });
+  return shuffle(out);
+}
+function renderTools(){
+  var tt=$("toolTabs");
+  tt.innerHTML=[["flash","Flashcards"],["autopsy","Distractor Autopsy"],["sort","Which Law?"]].map(function(t){
+    return '<button class="chip" type="button" data-t="'+t[0]+'" aria-pressed="'+(TOOL===t[0])+'">'+t[1]+'</button>'; }).join("");
+  tt.querySelectorAll(".chip").forEach(function(b){ b.onclick=function(){ TOOL=b.getAttribute("data-t"); openTool(); }; });
+  openTool();
+}
+function openTool(){
+  $("toolTabs").querySelectorAll(".chip").forEach(function(b){ b.setAttribute("aria-pressed",String(b.getAttribute("data-t")===TOOL)); });
+  if(TOOL==="flash"){ FL.cards=shuffle(DECKS.filter(function(d){return d.id===DECK;})[0].cards); FL.i=0; FL.flip=false; drawFlash(); }
+  if(TOOL==="autopsy"){ AUT.cards=autopsyCards(); AUT.i=0; AUT.show=false; drawAutopsy(); }
+  if(TOOL==="sort"){ SRT.cards=shuffle(SORT); SRT.i=0; SRT.picked=null; SRT.right=0; SRT.done=0; drawSort(); }
+}
+function drawFlash(){
+  var d=DECKS.map(function(x){ return '<button class="chip" type="button" data-d="'+x.id+'" aria-pressed="'+(DECK===x.id)+'">'+x.name+' ('+x.cards.length+')</button>'; }).join("");
+  var c=FL.cards[FL.i];
+  $("toolBody").innerHTML='<div class="chips" id="deckChips">'+d+'</div>'+
+    '<p class="note">These decks shuffle each time you open them. They cover the whole unit.</p>'+
+    '<button class="flash" type="button" id="flashCard" aria-live="polite">'+(FL.flip?'<span><span class="back">'+c[1]+'</span><span class="hint">Tap to see the term again</span></span>':'<span><span class="front">'+c[0]+'</span><span class="hint">Tap to flip</span></span>')+'</button>'+
+    '<div class="toolnav"><button class="btn" type="button" id="fPrev">← Back</button><span class="count">'+(FL.i+1)+' of '+FL.cards.length+'</span><button class="btn" type="button" id="fNext">Next →</button><button class="btn" type="button" id="fShuf">Shuffle</button></div>';
+  $("deckChips").querySelectorAll(".chip").forEach(function(b){ b.onclick=function(){ DECK=b.getAttribute("data-d"); openTool(); }; });
+  $("flashCard").onclick=function(){ FL.flip=!FL.flip; drawFlash(); };
+  $("fPrev").disabled=FL.i===0;
+  $("fPrev").onclick=function(){ FL.i--; FL.flip=false; drawFlash(); };
+  $("fNext").disabled=FL.i===FL.cards.length-1;
+  $("fNext").onclick=function(){ FL.i++; FL.flip=false; drawFlash(); };
+  $("fShuf").onclick=function(){ openTool(); };
+}
+function drawAutopsy(){
+  var chips='<button class="chip" type="button" data-s="all" aria-pressed="'+(AUT.sec==="all")+'">All sections</button>'+BANK.map(function(s){
+    return '<button class="chip" type="button" data-s="'+s.id+'" aria-pressed="'+(AUT.sec===s.id)+'">'+s.name+'</button>'; }).join("");
+  var body;
+  if(!AUT.cards.length){ body='<div class="card empty"><p>This section has no multiple-choice answers to pick apart. Try another section.</p></div>'; }
+  else {
+    var c=AUT.cards[AUT.i];
+    body='<div class="card autopsy"><div class="meta">'+c.q.sec.name+' · '+c.q.topic+'</div>'+
+      '<p class="stem">'+c.q.stem+(c.p.ask?'<br>'+c.p.ask:'')+'</p>'+(c.q.fig?'<div class="fig">'+fbd(c.q.fig)+'</div>':'')+
+      '<div><div class="small">A student chose this wrong answer:</div><div class="wrongopt">'+optHTML(c.o[0])+'</div></div>'+
+      '<p class="ask"><b>Say why it fails, then check yourself.</b></p>'+
+      (AUT.show?'<div class="why" style="padding-left:0"><b>Why it fails:</b> '+c.o[2]+'</div><div class="rchoice c"><b>The correct answer:</b> '+optHTML(c.right[0])+'</div>':'<button class="check" type="button" id="aShow">Check myself</button>')+
+      '</div>'+
+      '<div class="toolnav"><button class="btn" type="button" id="aPrev">← Back</button><span class="count">'+(AUT.i+1)+' of '+AUT.cards.length+'</span><button class="btn" type="button" id="aNext">Next →</button></div>';
+  }
+  $("toolBody").innerHTML='<div class="chips" id="autChips">'+chips+'</div><p class="note">Every card is a wrong answer from the practice test. The section chips filter this deck only; Flashcards and Which Law? always cover the whole unit.</p>'+body;
+  $("autChips").querySelectorAll(".chip").forEach(function(b){ b.onclick=function(){ AUT.sec=b.getAttribute("data-s"); openTool(); }; });
+  if(!AUT.cards.length) return;
+  if($("aShow")) $("aShow").onclick=function(){ AUT.show=true; drawAutopsy(); };
+  $("aPrev").disabled=AUT.i===0; $("aPrev").onclick=function(){ AUT.i--; AUT.show=false; drawAutopsy(); };
+  $("aNext").disabled=AUT.i===AUT.cards.length-1; $("aNext").onclick=function(){ AUT.i++; AUT.show=false; drawAutopsy(); };
+}
+function drawSort(){
+  if(SRT.i>=SRT.cards.length){
+    $("toolBody").innerHTML='<div class="card empty"><p><b>Done!</b> You matched '+SRT.right+' of '+SRT.done+' clues to the right law.</p><button class="btn pri" type="button" id="sAgain">Shuffle and go again</button></div>';
+    $("sAgain").onclick=function(){ openTool(); }; return;
+  }
+  var c=SRT.cards[SRT.i], h='<p class="note">Read the clue and pick the law it shows. The clues shuffle each time you open this drill.</p><div class="card"><div class="meta">Clue '+(SRT.i+1)+' of '+SRT.cards.length+' · '+SRT.right+' right so far</div><p class="stem">'+c[0]+'</p><div class="lawbtns">';
+  LAWS.forEach(function(L,li){
+    var cls=SRT.picked==null?'':(li===c[1]?' correct':(li===SRT.picked?' wrong':''));
+    h+= SRT.picked==null ? '<button class="opt" type="button" data-l="'+li+'"><span class="orow"><span class="otext"><b>'+L+'</b></span></span></button>'
+                         : '<div class="opt done'+cls+'"><span class="orow"><span class="otext"><b>'+L+'</b></span></span></div>';
+  });
+  h+='</div>';
+  if(SRT.picked!=null) h+='<div class="banner '+(SRT.picked===c[1]?'ok':'bad')+'">'+(SRT.picked===c[1]?'✓ Correct.':'✗ Not quite. It is the '+LAWS[c[1]]+'.')+'</div><div class="why" style="padding-left:0">'+c[2]+'</div><button class="check" type="button" id="sNext">Next clue →</button>';
+  h+='</div>';
+  $("toolBody").innerHTML=h;
+  $("toolBody").querySelectorAll("[data-l]").forEach(function(b){ b.onclick=function(){ SRT.picked=+b.getAttribute("data-l"); SRT.done++; if(SRT.picked===c[1]) SRT.right++; drawSort(); }; });
+  if($("sNext")) $("sNext").onclick=function(){ SRT.i++; SRT.picked=null; drawSort(); };
+}
+
+/* ---------- Review ---------- */
+var RF="missed";
+function renderReview(){
+  var groups={
+    missed:{name:"Missed", fn:isMissed, empty:"Questions you get wrong will appear here, with your answer, the correct answer, and why."},
+    flagged:{name:"Flagged", fn:function(q){return !!S.flags[q.id];}, empty:"Questions you flag on the practice test will appear here so you can come back to them."},
+    all:{name:"All answered", fn:function(q){return !!S.ans[q.id];}, empty:"Every question you answer will appear here."},
+    correct:{name:"Correct", fn:isCorrect, empty:"Questions you get right will appear here."}
+  };
+  $("reviewChips").innerHTML=Object.keys(groups).map(function(k){
+    return '<button class="chip" type="button" data-r="'+k+'" aria-pressed="'+(RF===k)+'">'+groups[k].name+' ('+count(groups[k].fn)+')</button>'; }).join("");
+  $("reviewChips").querySelectorAll(".chip").forEach(function(b){ b.onclick=function(){ RF=b.getAttribute("data-r"); renderReview(); }; });
+  var list=ALL.filter(groups[RF].fn), out="";
+  if(!list.length){
+    $("reviewList").innerHTML='<div class="card empty"><p>'+groups[RF].empty+'</p><button class="btn pri" type="button" id="goPractice">Go to the practice test</button></div>';
+    $("goPractice").onclick=function(){ showTab("practice"); }; return;
+  }
+  list.forEach(function(q){
+    var a=S.ans[q.id];
+    out+='<article class="card ritem"><div class="qtop"><div class="meta">'+q.sec.name+' · '+q.topic+'</div>'+
+      (a?'<span class="pill '+(a.ok?'ok':'bad')+'">'+(a.ok?'Correct':'Missed')+'</span>':'<span class="pill fl">Not answered yet</span>')+(S.flags[q.id]?' <span class="pill fl">Flagged</span>':'')+'</div>'+
+      '<p class="stem">'+q.stem+'</p>'+(q.fig?'<div class="fig">'+fbd(q.fig)+'</div>':'');
+    q.parts.forEach(function(p,pi){
+      var r=a&&a.parts[pi];
+      out+='<div class="rpart">'+(q.multi?'<div class="plab">Step '+"abcdefg"[pi]+'</div>':'')+(p.ask?'<div>'+p.ask+'</div>':'');
+      if(!r){ out+='<div class="small">Not answered yet.</div></div>'; return; }
+      if(p.opts){
+        var right=p.opts.filter(function(o){return o[1];})[0], mine=p.opts[r.v];
+        out+='<div class="rchoice '+(r.ok?'c':'w')+'"><b>You chose:</b> '+optHTML(mine[0])+'<div class="why" style="padding-left:0">'+mine[2]+'</div></div>';
+        if(!r.ok) out+='<div class="rchoice c"><b>Correct answer:</b> '+optHTML(right[0])+'<div class="why" style="padding-left:0">'+right[2]+'</div></div>';
+      } else {
+        out+='<div class="rchoice '+(r.ok?'c':'w')+'"><b>You typed:</b> '+esc(r.raw!=null?r.raw:fmtNum(r.v))+(p.num.unit?' '+p.num.unit:'')+'</div>';
+        if(!r.ok) out+='<div class="rchoice c"><b>Correct answer:</b> '+p.num.show+'</div>';
+        if(!r.ok && r.trap!=null && p.traps && p.traps[r.trap]) out+='<div class="trap">'+p.traps[r.trap][2]+'</div>';
+      }
+      if(p.work) out+='<div class="work"><h4>The work</h4><ol>'+p.work.map(function(w){return '<li>'+w+'</li>';}).join("")+'</ol></div>';
+      out+='</div>';
+    });
+    if(q.watch) out+='<div class="watch"><h4>Watch for</h4>'+q.watch+'</div>';
+    out+=reviewLine(q)+'</article>';
+  });
+  $("reviewList").innerHTML=out;
+}
+
+/* ---------- Start ---------- */
+function renderAll(){ renderStats(); renderChips(); renderQuestion(); if(TAB==="review") renderReview(); }
+buildOrder(true);
+renderAll();
+})();
+</script>
+</body>
+</html>
